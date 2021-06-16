@@ -3,16 +3,20 @@ from tkinter import ttk
 import random
 from tkinter import font
 from tkinter.font import Font
+from bubbleSort import bubble_sort
+
+
 
 root = Tk()
 
 root.title('Sorting Algo Visualizer')
 root.geometry('900x600+200+80')
 root.config(bg='#077A49')
-
+data =[]
 # All functions
 
-def drawData(data):
+def drawData(data, colorArray):
+    visualizerCanvas.delete("all")
     visualizerCanvasHeight = 450
     visualizerCanvasWidth = 870
     xWidth = visualizerCanvasWidth / (len(data)+1)
@@ -27,14 +31,37 @@ def drawData(data):
         x1 = (i+1) * xWidth
         y1 = visualizerCanvasHeight
 
-        visualizerCanvas.create_rectangle(x0,y0,x1,y1, fill="#A90042")
+        visualizerCanvas.create_rectangle(x0,y0,x1,y1, fill= colorArray[i])
         visualizerCanvas.create_text(x0+2, y0, anchor=SW, text=str(data[i]), font=("new roman", 15, "bold italic"), 
                                         fill="orange")
 
+    root.update_idletasks()
+
+
+def startAlgo():
+    # print("Initializing the sorting")
+    global data
+    bubble_sort(data, drawData, speedScale.get())
+
+
 def Generate():
+    global data
     print("Selected Algorithm: " + selectedAlgo.get())
-    data = [1,5,6,8,7,9,1,3,4,5]
-    drawData(data)
+    
+    # Taking direct input using the speed scales
+
+    miniValue = int(minimumValue.get())
+    maxiValue = int(maximumValue.get())
+    sizeeValue = int(sizeValue.get())
+
+    
+    data=[]
+    for _ in range(sizeeValue):
+        # we will add those speed scaled values by appending them
+        data.append(random.randrange(miniValue, maxiValue+1))
+
+
+    drawData(data, ["violet" for x in range(len(data))])
 
 selectedAlgo = StringVar()
 
@@ -93,7 +120,7 @@ maximumValue.place(x=625, y=60)
 # Start the visualization
 
 start = Button(root, text="Start!", bg="#C45B09", font=("ariel",12, "bold italic"), relief=SUNKEN,
-                   activebackground="#05945B", activeforeground="white", bd=5, width=10)
+                   activebackground="#05945B", activeforeground="white", bd=5, width=10, command=startAlgo)
 
 start.place(x=750, y=0)
 
@@ -101,7 +128,7 @@ speedLabel = Label(root, text="Speed: ", font=("new roman", 12, "bold italic"), 
                        width=10, fg="black", relief=GROOVE, bd=5, height=1)
 speedLabel.place(x=445,y=0)
 
-speedScale = Scale(root, from_=0.1, to=5.0, resolution=1, orient=HORIZONTAL,font=("new roman", 14, "bold italic"),
+speedScale = Scale(root, from_=0.1, to=5.0, resolution=0.2,length=200,digits=2, orient=HORIZONTAL,font=("new roman", 14, "bold italic"),
                    relief=GROOVE, bd=2, width=10)
 speedScale.place(x=570, y=0)
 
