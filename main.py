@@ -1,11 +1,11 @@
+from time import sleep
 from tkinter import * 
 from tkinter import ttk
 import random
 from tkinter import font
 from tkinter.font import Font
 from bubbleSort import bubble_sort
-
-
+from quickSort import quick_sort
 
 root = Tk()
 
@@ -41,7 +41,15 @@ def drawData(data, colorArray):
 def startAlgo():
     # print("Initializing the sorting")
     global data
-    bubble_sort(data, drawData, speedScale.get())
+    if not data:
+        return
+
+    if(selectedAlgo.get() == 'Quick Sort'):
+        quick_sort(data, 0, len(data)-1, drawData, speedScale.get())
+        drawData(data, ['green' for x in range(len(data))])
+
+    elif(selectedAlgo.get()=='Bubble Sort'):
+        bubble_sort(data, drawData, speedScale.get())
 
 
 def Generate():
@@ -94,6 +102,7 @@ sizeChangerLabel.place(x=0,y=60)
 sizeValue = Scale(root, from_=0, to=30, resolution=1, orient=HORIZONTAL,font=("new roman", 14, "bold italic"),
                    relief=GROOVE, bd=2, width=10)
 sizeValue.place(x=125, y=60)
+
 
 # Minimum value
 
